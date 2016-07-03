@@ -16,6 +16,7 @@
 
 @property (weak, nonatomic) IBOutlet SwipeView *swipeView;
 @property NSMutableArray* newsArray;
+@property NSTimer* timer;
 
 @end
 
@@ -64,12 +65,7 @@
     //create new view if no view is available for recycling
     if (view == nil)
     {
-        //don't do anything specific to the index within
-        //this `if (view == nil) {...}` statement because the view will be
-        //recycled and used with other index values later
-        
-        
-        
+
         view = [[UIView alloc] initWithFrame:self.swipeView.bounds];
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
@@ -102,6 +98,8 @@
 }
 
 -(void) swipeToBeginning {
+    NSLog(@"swipeToBeginning");
+    
     [self.swipeView scrollToItemAtIndex:0 duration: 0.5];
 }
 
@@ -109,13 +107,12 @@
     
     if (self.swipeView.currentPage == (self.swipeView.numberOfItems-1)) {
         NSLog(@"LAST PAGE!!");
-        [self swipeToBeginning];
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(swipeToBeginning) userInfo:nil repeats:NO];
     }
 }
 
--(void) swipeViewDidEndDragging:(SwipeView *)swipeView willDecelerate:(BOOL)decelerate {
 
-}
+
 
 
 
