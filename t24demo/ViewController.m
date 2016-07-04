@@ -60,6 +60,7 @@
 -(UIView *)swipeView:(SwipeView *)swipeView viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view{
     NSLog(@"Index num: %ld", (long)index);
     UIImageView *imageView = nil;
+    UILabel *label = nil;
     NSDictionary* newsItem = (NSDictionary*) self.newsArray[index];
     NSString* url = (NSString*)[[newsItem objectForKey:@"images"] objectForKey:@"box"];
     //create new view if no view is available for recycling
@@ -69,18 +70,33 @@
         view = [[UIView alloc] initWithFrame:self.swipeView.bounds];
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
-        imageView = [[UIImageView alloc] initWithFrame:view.bounds];
+        CGRect imageRect = CGRectMake(view.bounds.origin.x, view.bounds.origin.y, view.bounds.size.width, view.bounds.size.height * 0.7);
+        
+        imageView = [[UIImageView alloc] initWithFrame: imageRect];
         imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
         imageView.tag = 1;
-
-
+        
+        CGRect labelRect = CGRectMake(view.bounds.origin.x,( view.bounds.origin.y + imageView.bounds.size.height), view.bounds.size.width, view.bounds.size.height * 0.2);
+        
+        label = [[UILabel alloc] initWithFrame:labelRect];
+        label.text = @"hebele hubele";
+        label.textAlignment = NSTextAlignmentLeft;
+        label.tag = 2;
+        
+        NSLayoutConstraint* vertical = [ NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeTop
+                                                                    relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+        
+        
         [view addSubview:imageView];
+        [view addSubview:label];
+        [label addConstraint:vertical];
     }
     else
     {
         //get a reference to the label in the recycled view
         imageView = (UIImageView *)[view viewWithTag:1];
+        label = (UILabel*) [view viewWithTag:2];
         
     }
     
